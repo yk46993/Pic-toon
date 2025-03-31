@@ -1,0 +1,40 @@
+// بنیادی عناصر
+const uploadBox = document.getElementById('uploadBox');
+const imageInput = document.getElementById('imageInput');
+const resultCanvas = document.getElementById('resultCanvas');
+const downloadBtn = document.getElementById('downloadBtn');
+
+// تصویر اپلوڈ کرنے کا فنکشن
+uploadBox.addEventListener('click', () => imageInput.click());
+
+imageInput.addEventListener('change', (e) => {
+    if (e.target.files.length > 0) {
+        const file = e.target.files[0];
+        const reader = new FileReader();
+        
+        reader.onload = function(event) {
+            const img = new Image();
+            img.onload = function() {
+                // کینوس پر تصویر ظاہر کریں
+                resultCanvas.width = img.width;
+                resultCanvas.height = img.height;
+                const ctx = resultCanvas.getContext('2d');
+                ctx.drawImage(img, 0, 0);
+                
+                // ڈاؤنلوڈ بٹن فعال کریں
+                downloadBtn.disabled = false;
+            };
+            img.src = event.target.result;
+        };
+        
+        reader.readAsDataURL(file);
+    }
+});
+
+// ڈاؤنلوڈ کا فنکشن
+downloadBtn.addEventListener('click', () => {
+    const link = document.createElement('a');
+    link.download = 'cartoon-image.png';
+    link.href = resultCanvas.toDataURL('image/png');
+    link.click();
+});
